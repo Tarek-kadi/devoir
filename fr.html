@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes d'identité des personnages</title>
+    <style>body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.selection {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+select, input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.card-container {
+    margin-top: 30px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.card-header h2 {
+    margin: 0;
+}
+
+.card-body {
+    display: flex;
+    padding: 20px;
+}
+
+.photo-placeholder {
+    width: 150px;
+    height: 200px;
+    background-color: #eee;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #777;
+    border: 1px dashed #ccc;
+}
+
+.info {
+    flex: 1;
+}
+
+.info p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.card-footer {
+    padding: 15px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-top: 1px solid #eee;
+}
+
+.user-id {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+}
+
+.user-id h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.user-info {
+    margin-bottom: 20px;
+}
+
+.user-card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.hidden {
+    display: none;
+}
+
+@media print {
+    button {
+        display: none;
+    }
+    
+    .selection, .user-id {
+        display: none;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: none;
+    }
+}</style>
+</head>
+<body>
+    <h3>Madame Cheval
+        Alkadi Tarek
+        
+    </h3>
+    <div class="container">
+        <h1>Cartes d'identité des personnages de Molière</h1>
+        
+        <div class="selection">
+            <label for="character-select">Choisissez un personnage :</label>
+            <select id="character-select">
+                <option value="">-- Sélectionnez --</option>
+                <option value="harpagon">Harpagon</option>
+                <option value="scapin">Scapin</option>
+                <option value="argan">Argan</option>
+                <option value="toinette">Toinette</option>
+                <option value="purgon">Monsieur Purgon</option>
+                <option value="magdelon">Magdelon</option>
+                <option value="geronte">Géronte</option>
+            </select>
+            
+            <button id="generate-btn">Générer la carte</button>
+        </div>
+        
+        <div class="card-container hidden" id="card-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2 id="card-title">Carte d'identité</h2>
+                </div>
+                <div class="card-body">
+                    <div class="photo-placeholder" id="character-photo"></div>
+                    <div class="info">
+                        <p><strong>Pièce :</strong> <span id="piece"></span></p>
+                        <p><strong>Nom et surnom :</strong> <span id="nom"></span></p>
+                        <p><strong>Âge approximatif :</strong> <span id="age"></span></p>
+                        <p><strong>Profession :</strong> <span id="profession"></span></p>
+                        <p><strong>Famille :</strong> <span id="famille"></span></p>
+                        <p><strong>Traits de caractère :</strong> <span id="caractere"></span></p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button id="print-btn">Imprimer la carte</button>
+                </div>
+            </div>
+        </div>
+        
+     
+    <script >document.addEventListener('DOMContentLoaded', function() {
+    // Données des personnages
+    const characters = {
+        harpagon: {
+            piece: "L'Avare",
+            nom: "Harpagon (surnommé 'l'avare')",
+            age: "60 ans",
+            profession: "Riche bourgeois",
+            famille: "Père de Cléante et Élise",
+            caractere: "Avare, méfiant, égoïste"
+        },
+        scapin: {
+            piece: "Les Fourberies de Scapin",
+            nom: "Scapin (surnommé 'le fourbe')",
+            age: "30-40 ans",
+            profession: "Valet rusé",
+            famille: "Au service de Géronte",
+            caractere: "Malin, manipulateur, courageux"
+        },
+        argan: {
+            piece: "Le Malade imaginaire",
+            nom: "Argan (surnommé 'le malade imaginaire')",
+            age: "50 ans",
+            profession: "Bourgeois hypocondriaque",
+            famille: "Père d'Angélique et mari de Béline",
+            caractere: "Hypocondriaque, crédule, autoritaire"
+        },
+        toinette: {
+            piece: "Le Malade imaginaire",
+            nom: "Toinette (servante et suivante)",
+            age: "25-35 ans",
+            profession: "Servante",
+            famille: "Au service d'Argan",
+            caractere: "Espiègle, intelligente, fidèle"
+        },
+        purgon: {
+            piece: "Le Malade imaginaire",
+            nom: "Monsieur Purgon (médecin)",
+            age: "50-60 ans",
+            profession: "Médecin",
+            famille: "Aucune mention",
+            caractere: "Autoritaire, dogmatique, intéressé"
+        },
+        magdelon: {
+            piece: "Les Précieuses ridicules",
+            nom: "Magdelon (précieuse)",
+            age: "20-25 ans",
+            profession: "Bourgeoise oisive",
+            famille: "Fille de Gorgibus",
+            caractere: "Prétentieuse, snob, romanesque"
+        },
+        geronte: {
+            piece: "Les Fourberies de Scapin",
+            nom: "Géronte (vieillard)",
+            age: "70 ans",
+            profession: "Vieil homme riche",
+            famille: "Père de Léandre",
+            caractere: "Avare, crédule, autoritaire"
+        }
+    };
+
+    // Éléments du DOM
+    const characterSelect = document.getElementById('character-select');
+    const generateBtn = document.getElementById('generate-btn');
+    const cardContainer = document.getElementById('card-container');
+    const printBtn = document.getElementById('print-btn');
+    const userSection = document.getElementById('user-id-section');
+    const saveIdBtn = document.getElementById('save-id-btn');
+    const userCard = document.getElementById('user-card');
+
+    // Générer la carte du personnage
+    generateBtn.addEventListener('click', function() {
+        const selectedCharacter = characterSelect.value;
+        
+        if (selectedCharacter) {
+            const character = characters[selectedCharacter];
+            
+            // Remplir les informations de la carte
+            document.getElementById('piece').textContent = character.piece;
+            document.getElementById('nom').textContent = character.nom;
+            document.getElementById('age').textContent = character.age;
+            document.getElementById('profession').textContent = character.profession;
+            document.getElementById('famille').textContent = character.famille;
+            document.getElementById('caractere').textContent = character.caractere;
+            
+            // Mettre à jour la photo du personnage (placeholder)
+            const photoPlaceholder = document.getElementById('character-photo');
+            photoPlaceholder.textContent = character.nom.split(' ')[0];
+            
+            // Afficher la carte
+            cardContainer.classList.remove('hidden');
+            
+            // Afficher la section d'identité utilisateur
+            userSection.classList.remove('hidden');
+        } else {
+            alert('Veuillez sélectionner un personnage');
+        }
+    });
+
+    // Imprimer la carte
+    printBtn.addEventListener('click', function() {
+        window.print();
+    });
+
+    // Enregistrer l'identité de l'utilisateur
+    saveIdBtn.addEventListener('click', function() {
+        const userName = document.getElementById('user-name').value;
+        const userAge = document.getElementById('user-age').value;
+        const selectedCharacter = characterSelect.options[characterSelect.selectedIndex].text;
+        
+        if (userName && userAge) {
+            document.getElementById('display-user-name').textContent = userName;
+            document.getElementById('display-user-age').textContent = userAge;
+            document.getElementById('display-user-character').textContent = selectedCharacter;
+            
+            userCard.classList.remove('hidden');
+        } else {
+            alert('Veuillez remplir tous les champs');
+        }
+    });
+});</script>
+</body>
+</html>
